@@ -1,4 +1,25 @@
 from multipledispatch import dispatch
+
+pairs = {
+    'North': 'South',
+    'NorthEast': 'SouthWest',
+    'East': 'West',
+    'SouthEast': 'NorthWest',
+    'South': 'North',
+    'SouthWest': 'NorthEast',
+    'West': 'East',
+    'NorthWest': 'SouthEast'
+}
+directions = {
+    'North': (-1,0),
+    'NorthEast': (-1,1),
+    'East': (0,1),
+    'SouthEast': (1,1),
+    'South': (1,0),
+    'SouthWest': (1,-1),
+    'West': (0,-1),
+    'NorthWest': (-1,-1) 
+}
 class Tiles():
     def __init__(self, name = None, position = None, ori = 0):
         self.color = (255,255,255)
@@ -7,26 +28,6 @@ class Tiles():
         self.position = position
         self.orientation = ori
         self.tile_type = self.__class__.__name__ + str(ori)
-        self.pairs = {
-            'North': 'South',
-            'NorthEast': 'SouthWest',
-            'East': 'West',
-            'SouthEast': 'NorthWest',
-            'South': 'North',
-            'SouthWest': 'NorthEast',
-            'West': 'East',
-            'NorthWest': 'SouthEast'
-        }
-        self.directions = {
-            'North': (-1,0),
-            'NorthEast': (-1,1),
-            'East': (0,1),
-            'SouthEast': (1,1),
-            'South': (1,0),
-            'SouthWest': (1,-1),
-            'West': (0,-1),
-            'NorthWest': (-1,-1) 
-        }
 
     @dispatch(object)
     def connect(self, other_tile):
@@ -37,7 +38,7 @@ class Tiles():
     @dispatch(str, object)
     def connect(self, direction, other_tile):
         self.connections[direction] = other_tile
-        other_tile.connections[self.pairs[direction]] = self
+        other_tile.connections[pairs[direction]] = self
 
     @dispatch(object)
     def disconnect(self, other_tile):
@@ -52,7 +53,7 @@ class Tiles():
     @dispatch(str, object)
     def disconnect(self, direction, other_tile):
         self.connections[direction] = None
-        other_tile.connections[self.pairs[direction]] = None
+        other_tile.connections[pairs[direction]] = None
 
     def can_connect(self, other_tile, board):
         y,x = next_connection_location(self, other_tile)
@@ -68,20 +69,19 @@ class Tiles():
         if len(open_connection)>1:
             open_connection.remove(connecting_direction)
         open_connection = open_connection[0]
-        y,x = self.add_positions(end.position, self.directions[open_connection])
+        y,x = add_positions(end.position, directions[open_connection])
         return inbounds((y,x)) and board[y][x].__class__.__name__ == 'End'
-        ## TODO: IMPLEMENT POSITIONS IN path.py
 
     def shared_open_connections(self, other_tile):
         for direction in self.connections:
-            connecting_direction = self.pairs[direction]
+            connecting_direction = pairs[direction]
             if connecting_direction in other_tile.connections and self.connections[direction] == None:
                 return direction, connecting_direction
         return ()
     
     def shared_closed_connections(self, other_tile):
         for direction in self.connections:
-            connecting_direction = self.pairs[direction]
+            connecting_direction = pairs[direction]
             if connecting_direction in other_tile.connections and self.connections[direction] != None:
                 return direction, connecting_direction
         return ()
@@ -105,9 +105,6 @@ class Tiles():
     def remove_position(self):
         self.position = None
     
-    def add_positions(self, position1, position2): #*************8
-        return tuple(map(sum, zip(position1, position2)))
-    
     def __str__(self):
         string = f'Type: {self.__class__.__name__}, Name: {self.name}, Orientation({self.orientation}): {list(self.connections)}, Position: {self.position}, Connections: '
         for key, value in self.connections.items():
@@ -123,7 +120,7 @@ class Edge(Tiles):
         self.connections[pointing] = None
 
     def update_shape(self):
-        y,x = self.directions[self.pointing]
+        y,x = directions[self.pointing]
         thing = list(self.shape[1+y])
         thing[x+1] = '.'
         self.shape[y+1] = ''.join(thing)
@@ -264,7 +261,7 @@ class Ninety(Tiles):
             self.connections['East'] = None
             self.shape = [
                 ' | ',
-                ' ╰─', ###
+                ' ╰─', 
                 '   '
             ]
         elif ori == 1:
@@ -280,7 +277,7 @@ class Ninety(Tiles):
             self.connections['South'] = None
             self.shape = [
                 '   ',
-                ' ╭─', ##
+                ' ╭─', 
                 ' | '
             ]
         elif ori == 3:
@@ -296,7 +293,7 @@ class Ninety(Tiles):
             self.connections['West'] = None
             self.shape = [
                 '   ',
-                '─╮ ',##
+                '─╮ ',
                 ' | '
             ]
         elif ori == 5:
@@ -312,7 +309,7 @@ class Ninety(Tiles):
             self.connections['North'] = None
             self.shape = [
                 ' | ',
-                '─╯ ', ##
+                '─╯ ', 
                 '   '
             ]
         elif ori == 7:
@@ -406,18 +403,12 @@ def next_connection_location(current, next_tile):
     if len(open_connection)>1:
         open_connection.remove(connecting_direction)
     open_connection = open_connection[0]
-    y,x = add_positions(next_tile.position, current.directions[open_connection])
+    y,x = add_positions(next_tile.position, directions[open_connection])
 
     return (y,x)
 
 def add_positions(position1, position2):
     return tuple(map(sum, zip(position1, position2)))
-
-def print_board(board):
-    for row in board:
-        for tile in row:
-            print(None if tile == None else tile.name,end = " ")
-        print()
 
 if __name__ == '__main__':
     start = Start('East', position=(0,0))

@@ -18,8 +18,7 @@ class PathFinder():
         self.start = None
         self.end = None
 
-        self.size = size
-        self.board = [[None for _ in range(size)] for _ in range(size)]#[[None]*size]*size
+        self.set_size(size)
 
     def set_size(self, size):
         self.size = size
@@ -45,8 +44,8 @@ class PathFinder():
                 return True
             
         direction = current.get_open_connection()
-        connecting_direction = current.pairs[direction]
-        new_position = current.add_positions(current.position, current.directions[direction])
+        connecting_direction = pairs[direction]
+        new_position = add_positions(current.position, directions[direction])
         possible_tiles = self.tiles[connecting_direction][:]
         used = []
         for tile in possible_tiles:
@@ -85,6 +84,9 @@ class PathFinder():
     def remove_tile(self, tile):
         self.tileList.remove(tile)
         self.use_tile(tile)
+    
+    def add_blank(self, y,x):
+        self.board[y][x] = "BLANK"
         
     def unuse_tile(self, tile):
         direction1, direction2 = list(tile.connections)
@@ -130,33 +132,18 @@ class PathFinder():
             return ''
         
         string = f'{current.name} -> '
-        # print(string)
         directions = list(current.connections)
         if len(directions)>1:
             directions.remove(direction)
         next_direction = directions[0]
  
-        return string + self.print_path(current.connections[next_direction], current.pairs[next_direction])
+        return string + self.print_path(current.connections[next_direction], pairs[next_direction])
 
     def print_board(self):
-        print()
-        table = []
-        for row in self.board:
-            lst = []
-            for tile in row:
-                if tile == None:
-                    lst.append('|||')
-                else:
-                    lst.append(tile.__class__.__name__+ ' '+str(tuple(tile.connections)))
-            table.append(lst)
-        print(tabulate(table))
-
-    def print_board2(self):
-        table = []
         for row in self.board:
             lst = ['','','']
             for tile in row:
-                if tile == None:
+                if tile == None or tile == "BLANK":
                     lst[0] += '   '
                     lst[1] += '   '
                     lst[2] += '   '
@@ -283,8 +270,89 @@ if __name__ == '__main__':
         pf.add_tile(tile9)
         pf.add_tile(tile1)
 
+    if level == 219:
+        size = 6
+        start = Start('SouthEast', position=(0,2))
+        end = End('West', position = (0,4))
+
+        tile1 = Ninety(name = 'tile1', ori = 2)
+        tile2 = Ninety(name = 'tile2', ori = 2)
+        tile3 = Ninety(name = 'tile3', ori = 6)
+        tile4 = Ninety(name = 'tile4', ori = 6)
+        tile5 = Ninety(name = 'tile5', ori = 6)
+        tile6 = Ninety(name = 'tile6', ori = 0)
+
+        tile7 = Ninety(name = 'tile7', ori = 7)
+        tile8 = Ninety(name = 'tile8', ori = 5)
+        tile9 = Ninety(name = 'tile9', ori = 3)
+
+        tile10 = Fourty_five(name = 'tile10', ori = 0)
+        tile11 = Fourty_five(name = 'tile11', ori = 7)
+        tile12 = Fourty_five(name = 'tile12', ori = 7)
+        tile13 = Fourty_five(name = 'tile13', ori = 2)
+        tile14 = Fourty_five(name = 'tile14', ori = 2)
+        tile15 = Fourty_five(name = 'tile15', ori = 3)
+        tile16 = Fourty_five(name = 'tile16', ori = 3)
+        tile17 = Fourty_five(name = 'tile17', ori = 4)
+        tile18 = Fourty_five(name = 'tile18', ori = 4)
+
+        tile19 = One_thirty_five(name = 'tile19', ori = 3)
+        tile20 = One_thirty_five(name = 'tile20', ori = 4)
+        tile21 = One_thirty_five(name = 'tile21', ori = 6)
+        tile22 = One_thirty_five(name = 'tile22', ori = 6)
+        tile23 = One_thirty_five(name = 'tile23', ori = 7)
+        tile24 = One_thirty_five(name = 'tile24', ori = 7)
+
+        tile25 = Line(name = 'tile25', ori = 0)
+        tile26 = Line(name = 'tile26', ori = 0)
+        tile27 = Line(name = 'tile27', ori = 0)
+        tile28 = Line(name = 'tile28', ori = 0)
+        tile29 = Line(name = 'tile29', ori = 2)
+        tile30 = Line(name = 'tile30', ori = 2)
+
+
+        pf.set_size(size)
+        pf.set_start(start)
+        pf.set_end(end)
+
+        pf.add_blank(0,0)
+        pf.add_blank(0,1)
+        pf.add_blank(1,0)
+        pf.add_blank(1,1)
+        pf.add_tile(tile13)
+        pf.add_tile(tile2)
+        pf.add_tile(tile3)
+        pf.add_tile(tile4)
+        pf.add_tile(tile6)
+        pf.add_tile(tile1)
+        pf.add_tile(tile7)
+        pf.add_tile(tile8)
+        pf.add_tile(tile9)
+        pf.add_tile(tile10)
+        pf.add_tile(tile15)
+        pf.add_tile(tile11)
+        pf.add_tile(tile5)
+        pf.add_tile(tile18)
+        pf.add_tile(tile19)
+        pf.add_tile(tile12)
+        pf.add_tile(tile14)
+        pf.add_tile(tile16)
+        pf.add_tile(tile26)
+        pf.add_tile(tile17)
+        pf.add_tile(tile30)
+        pf.add_tile(tile20)
+        pf.add_tile(tile22)
+        pf.add_tile(tile23)
+        pf.add_tile(tile24)
+        pf.add_tile(tile25)
+        pf.add_tile(tile21)
+        pf.add_tile(tile27)
+        pf.add_tile(tile28)
+        pf.add_tile(tile29)
+
+    
     start_time = time.time()
     pf.find_path()
     end_time = time.time()
-    pf.print_board2()
+    pf.print_board()
     print(end_time - start_time)
