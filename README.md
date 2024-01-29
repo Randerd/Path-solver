@@ -8,9 +8,9 @@ Given an 𝑛 × 𝑛 board, a start & end location, and a series of tiles, util
     - [ ] "Traps" - If placing a tile creates spaces that cannot be be used
     - [ ] "Must" tiles - Tiles that must be placed at certain positions 
 - [ ] Transfer to Java
-- [ ] Design Convolution Neural Network (CNN) for tile placement
-    - [ ] Create data set of possible tiles
-    - [ ] Train CNN 
+- [x] Design Convolution Neural Network (CNN) for tile placement
+    - [x] Create data set of possible tiles
+    - [x] Train CNN 
 - [ ] Implement UI
     - [ ] Let user change board size
     - [ ] Use CNN to let users draw in tiles

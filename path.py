@@ -1,6 +1,6 @@
 from tiles import *
 from multipledispatch import dispatch
-from tabulate import tabulate
+# from tabulate import tabulate
 
 class PathFinder():
     def __init__(self, size = 5):

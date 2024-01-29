@@ -1,0 +1,9 @@
+pillow
+scikit-learn
+numpy
+glob2
+tensorflow
+scikit-learn
+keras
+matplotlib
+multipledispatch
