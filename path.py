@@ -121,7 +121,25 @@ class PathFinder():
         for _, value in self.tiles.items():
             count += len(value)
         return count/2
-    
+
+    def check_trap(self, cur_tile, y,x):
+        checks = [(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1),(0,-1),(1,-1)]
+        for Y,X in checks:
+            new_y, new_x = y + Y, x + X
+            print(f'\n-={new_y,new_x}=-')
+            if inbounds((new_y,new_x), self.size):
+                for Y2,X2 in checks:
+                    count = 0
+                    new_y2, new_x2 = new_y + Y2, new_x + X2
+                    if inbounds((new_y2, new_x2), self.size):
+                        if self.board[new_y2][new_x2] == None:
+                            count+=1
+                        
+                        if count == 2:
+                            return True
+                        print(new_y2,new_x2)
+                    
+
     @dispatch()
     def print_path(self):
         return self.print_path(self.start, self.start.pointing)
