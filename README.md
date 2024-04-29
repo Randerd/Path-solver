@@ -7,7 +7,7 @@ Given an 𝑛 × 𝑛 board, a start & end location, and a series of tiles, util
     - [x] Duplicate tile check - Don't backtrack to a tile type that has already been tested
     - [ ] "Traps" - If placing a tile creates spaces that cannot be be used
     - [ ] "Must" tiles - Tiles that must be placed at certain positions 
-- [ ] Transfer to Java
+- [x] Transfer to Java
 - [x] Design Convolution Neural Network (CNN) for tile placement
     - [x] Create data set of possible tiles
     - [x] Train CNN 

@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public interface GlobalConstants
+public interface Constants
 {
     HashMap<String, String> oppDir = createPairs(); //new HashMap<String, String>();
     HashMap<String, int[]> dirToOffset = createDir();

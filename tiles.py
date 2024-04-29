@@ -40,11 +40,11 @@ class Tiles():
         self.connections[direction] = other_tile
         other_tile.connections[pairs[direction]] = self
 
-    @dispatch(object)
-    def disconnect(self, other_tile):
-        direction, connecting_direction = self.shared_closed_connections(other_tile)
-        self.disconnect(direction)
-        other_tile.disconnect(connecting_direction)
+    # @dispatch(object)
+    # def disconnect(self, other_tile):
+    #     direction, connecting_direction = self.shared_closed_connections(other_tile)
+    #     self.disconnect(direction)
+    #     other_tile.disconnect(connecting_direction)
     
     @dispatch(str)
     def disconnect(self, direction):
@@ -55,22 +55,22 @@ class Tiles():
         self.connections[direction] = None
         other_tile.connections[pairs[direction]] = None
 
-    def can_connect(self, other_tile, board):
-        y,x = next_connection_location(self, other_tile)
+    # def can_connect(self, other_tile, board):
+    #     y,x = next_connection_location(self, other_tile)
 
-        return inbounds((y,x)) and (board[y][x] == None or board[y][x].__class__.__name__ == 'End')
+    #     return inbounds((y,x)) and (board[y][x] == None or board[y][x].__class__.__name__ == 'End')
     
-    def can_connect_end(self, end, board):
-        if len(self.shared_open_connections(end)) == 0:
-            return False
+    # def can_connect_end(self, end, board):
+    #     if len(self.shared_open_connections(end)) == 0:
+    #         return False
         
-        direction, connecting_direction = self.shared_open_connections(end)
-        open_connection = list(end.connections)
-        if len(open_connection)>1:
-            open_connection.remove(connecting_direction)
-        open_connection = open_connection[0]
-        y,x = add_positions(end.position, directions[open_connection])
-        return inbounds((y,x)) and board[y][x].__class__.__name__ == 'End'
+    #     direction, connecting_direction = self.shared_open_connections(end)
+    #     open_connection = list(end.connections)
+    #     if len(open_connection)>1:
+    #         open_connection.remove(connecting_direction)
+    #     open_connection = open_connection[0]
+    #     y,x = add_positions(end.position, directions[open_connection])
+    #     return inbounds((y,x)) and board[y][x].__class__.__name__ == 'End'
 
     def shared_open_connections(self, other_tile):
         for direction in self.connections:
@@ -79,20 +79,20 @@ class Tiles():
                 return direction, connecting_direction
         return ()
     
-    def shared_closed_connections(self, other_tile):
-        for direction in self.connections:
-            connecting_direction = pairs[direction]
-            if connecting_direction in other_tile.connections and self.connections[direction] != None:
-                return direction, connecting_direction
-        return ()
+    # def shared_closed_connections(self, other_tile):
+    #     for direction in self.connections:
+    #         connecting_direction = pairs[direction]
+    #         if connecting_direction in other_tile.connections and self.connections[direction] != None:
+    #             return direction, connecting_direction
+    #     return ()
         # return list(set(self.connections) & set(other_tile.connections))
 
-    def num_connections(self):
-        x = list(self.connections.values())
-        return len(list(filter(lambda x: x != None, x)))
+    # def num_connections(self):
+    #     x = list(self.connections.values())
+    #     return len(list(filter(lambda x: x != None, x)))
     
-    def is_connected(self):
-        return self.num_connections() > 0
+    # def is_connected(self):
+    #     return self.num_connections() > 0
     
     def get_open_connection(self):
         for key, value in self.connections.items():
@@ -396,6 +396,7 @@ def inbounds(position, size=4):
 
 def next_connection_location(current, next_tile):
     if len(current.shared_open_connections(next_tile)) == 0:
+        print("test")
         return False
     
     direction, connecting_direction = current.shared_open_connections(next_tile)

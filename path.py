@@ -38,10 +38,10 @@ class PathFinder():
         num+=1
 
         #Base case
-        if self.tiles_left() == 0:
-            print('**', current)
-            if current.can_connect(self.end, self.board):
-                return True
+        # if self.tiles_left() == 0:
+        #     print('**', current)
+        #     if current.can_connect(self.end, self.board):
+        #         return True
             
         direction = current.get_open_connection()
         connecting_direction = pairs[direction]
@@ -55,6 +55,7 @@ class PathFinder():
             
             tile.set_position(new_position)
             y,x = next_connection_location(current, tile)
+            
             # print(num if num>9 else '0'+str(num), self.print_path(),'-->', tile.name, new_position, (y,x), inbounds((x,y), size = self.size))
             if inbounds((x,y), size = self.size) and self.board[y][x] == None:
                 current.connect(direction, tile)
@@ -90,8 +91,10 @@ class PathFinder():
         
     def unuse_tile(self, tile):
         direction1, direction2 = list(tile.connections)
-        self.tiles[direction1].insert(0,tile)
-        self.tiles[direction2].insert(0,tile)
+        self.tiles[direction1].append(tile) 
+        self.tiles[direction2].append(tile)
+        # self.tiles[direction1].insert(0,tile) #Turns out using O(n) operations really slow things down
+        # self.tiles[direction2].insert(0,tile)
         # self.unplace_tile(tile)
 
     def use_tile(self, tile):
@@ -123,6 +126,7 @@ class PathFinder():
         return count/2
 
     def check_trap(self, cur_tile, y,x):
+        #TODO
         checks = [(1,0),(1,1),(0,1),(-1,1),(-1,0),(-1,-1),(0,-1),(1,-1)]
         for Y,X in checks:
             new_y, new_x = y + Y, x + X
@@ -217,7 +221,7 @@ if __name__ == '__main__':
         tile17= Line(name = 'VLine4', ori = 0)
 
         tile18 = Line(name = '/Line1', ori = 1) 
-        tile19= Line(name = '/line2', ori = 1)
+        tile19 = Line(name = '/line2', ori = 1)
         tile20 = One_thirty_five(name = 'OneThirtyFive1', ori = 5)
         tile21 = One_thirty_five(name = 'OneThirtyFive2', ori = 2)
         tile22 = One_thirty_five(name = 'OneThirtyFive3', ori = 6)
